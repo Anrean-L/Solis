@@ -1,0 +1,134 @@
+@use "sass:math";
+
+
+// обнуление
+@import "base/reset";
+// подклюфчение миксинов
+@import "base/mixins";
+
+// подключение шрифтов
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital@0;1&display=swap');
+
+// подключение локальных шрифтов
+// @import "fonts/fonts";
+
+// подключение иконочного шрифта
+@import "fonts/icons";
+
+// шрифт по умолчанию
+$fontFamily: "Lato";
+$fontFamilySec: "Playfair Display";
+$fontSize: rem(18);
+
+// основные цвета
+$fontColor: #262A3F;
+$SecondColor: #85BBB1;
+$linkColor: #F1897B;
+
+// минимальная ширина страницы
+$minWidth: 320;
+// ширина макета
+$maxWidth: 1280;
+// ширина ограничивающего контейнера (0 - нет контейнера)
+$maxWidthContainer: 1152;
+// общий отступ у контейнера (отступ слева и справа в сумме)
+$containerPadding: 32;
+
+// тип адаптива:
+// 1 - динамический 
+// 2- по брейк-поинтам
+$responsiveType: 1;
+// ширина срабатывания первого брейко-поинта
+$containerWidth: $maxWidthContainer + $containerPadding;
+
+// Брейк-поинты
+$pc: em($containerWidth);
+$tablet: em(991.98);
+$mobile: em(767.98);
+$mobile-small: em(479.98);
+
+body {
+    font-family: $fontFamily, "Verdana", sans-serif;
+    font-weight: 300;
+    font-size: $fontSize;
+    color: $fontColor;
+
+    .lock & {
+        overflow: hidden;
+        touch-action: none;
+    }
+}
+
+.wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    // сайт загружен
+    // .loaded & {}
+
+    // прижимаем футер
+    >main {
+        flex: 1 1 auto;
+    }
+
+    // фикс для слайдеров
+    >* {
+        min-width: 0;
+    }
+}
+
+// ограничивающий контейнер
+@if ($responsiveType==1) {
+    [class*="__container"] {
+        @if ($maxWidthContainer>0) {
+            max-width: rem($maxWidthContainer);
+            box-sizing: content-box;
+            margin: 0 auto;
+        }
+
+        @if ($containerPadding>0) {
+            padding: 0 rem(math.div($containerPadding, 2));
+        }
+    }
+}
+
+@else {
+    [class*="__container"] {
+        margin: 0 auto;
+
+        @if ($maxWidthContainer>0) {
+            max-width: rem($maxWidthContainer);
+            box-sizing: content-box;
+        }
+
+        @else {
+            @if ($containerPadding>0) {
+                padding: 0 rem(math.div($containerPadding, 2));
+            }
+        }
+
+        @media(max-width: $pc) {
+            max-width: rem(970);
+        }
+
+        @media(max-width: $tablet) {
+            max-width: rem(750);
+        }
+
+        @media(max-width: $mobile) {
+            max-width: none;
+
+            @if ($containerPadding>0 and $maxWidthContainer>0) {
+                padding: 0 rem(math.div($containerPadding, 2));
+            }
+        }
+    }
+}
+
+// подключение базовых стилей
+@import "base";
+
+// подключение стилей отдельных страниц
+@import "index";
